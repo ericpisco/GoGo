@@ -1,20 +1,58 @@
-<!-- index.html -->
+<!-- public/index.html -->
 <!DOCTYPE html>
 <html lang="en">
-    
+
 <head>
     <h1 style="color: blue; position: fixed; top: 0; left: 0;">Go</h1>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <title>User Registration</title>
-    
+
+    <script>
+        function validateForm() {
+            var name = document.getElementById('name').value;
+            var phone = document.getElementById('phone').value;
+            var password = document.getElementById('password').value;
+
+            // Reset previous error messages
+            document.getElementById('error-message').innerText = '';
+
+            // Validate phone number
+            if (!/^\d+$/.test(phone)) {
+                document.getElementById('error-message').innerText = 'Phone number must be numerical.';
+                return false;
+            }
+
+            if (phone.length !== 10) {
+                document.getElementById('error-message').innerText = 'Phone number must be 10 digits.';
+                return false;
+            }
+
+            // Other validations can be added here
+
+            return true;
+        }
+
+        function displayErrorMessage(message) {
+            document.getElementById('error-message').innerText = message;
+        }
+
+        // Function to handle error response from server
+        function handleServerError(errorMessage, name, phone) {
+            displayErrorMessage(errorMessage);
+            // Optionally, you can fill in the form fields with the previous values
+            document.getElementById('name').value = name || '';
+            document.getElementById('phone').value = phone || '';
+        }
+    </script>
 </head>
+
 <body>
-    
+
     <div class="container">
         <h1>Register with Go</h1>
-        <form id="registrationForm" action="http://localhost:5500/register" method="post">
+        <form id="registrationForm" action="http://localhost:5500/register" method="post" onsubmit="return validateForm()">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
 
@@ -25,9 +63,22 @@
             <input type="password" id="password" name="password" required>
 
             <button type="submit">Register</button>
+            <p id="error-message" style="color: red;"></p>
         </form>
         <p>Already have an account?   <a href="login.html">Log in here</a></p>
         <p> <a href="home.html">Home Page</a></p>
     </div>
+
+    <script>
+        // Assuming the error message is passed from the server
+        const errorMessageFromServer = "Phone number already registered";
+        const nameFromServer = "";
+        const phoneFromServer = "";
+
+        if (errorMessageFromServer) {
+            handleServerError(errorMessageFromServer, nameFromServer, phoneFromServer);
+        }
+    </script>
 </body>
+
 </html>
