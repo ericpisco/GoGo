@@ -1,4 +1,4 @@
-<!-- public/index.html -->
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,17 +33,10 @@
 
             return true;
         }
-
+        
+        // Function to display server-side error messages
         function displayErrorMessage(message) {
             document.getElementById('error-message').innerText = message;
-        }
-
-        // Function to handle error response from server
-        function handleServerError(errorMessage, name, phone) {
-            displayErrorMessage(errorMessage);
-            // Optionally, you can fill in the form fields with the previous values
-            document.getElementById('name').value = name || '';
-            document.getElementById('phone').value = phone || '';
         }
     </script>
 </head>
@@ -68,17 +61,6 @@
         <p>Already have an account?   <a href="login.html">Log in here</a></p>
         <p> <a href="home.html">Home Page</a></p>
     </div>
-
-    <script>
-        // Assuming the error message is passed from the server
-        const errorMessageFromServer = "Phone number already registered";
-        const nameFromServer = "";
-        const phoneFromServer = "";
-
-        if (errorMessageFromServer) {
-            handleServerError(errorMessageFromServer, nameFromServer, phoneFromServer);
-        }
-    </script>
 </body>
 
 </html>
