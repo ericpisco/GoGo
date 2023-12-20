@@ -42,7 +42,7 @@ app.post('/login', async (req, res) => {
                 console.error('Error selecting user:', selectErr);
                 res.status(500).json({ message: 'Login failed' });
             } else if (selectResult.length === 0) {
-                res.json({ message: 'User not found' });
+                res.json("User not found");
             } else {
                 const user = selectResult[0];
 
