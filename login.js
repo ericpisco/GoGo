@@ -88,7 +88,7 @@ app.post('/do_activity', (req, res) => {
 // API endpoint to retrieve user-specific activities
 app.get('/user_activities', (req, res) => {
     const user = req.session.user;
-    
+
     // Retrieve activities for the specific user
     const selectQuery = 'SELECT * FROM users_activities WHERE user_id = ?';
     db.query(selectQuery, [user.id], (selectErr, selectResult) => {
