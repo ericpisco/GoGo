@@ -68,6 +68,38 @@ app.post('/login', async (req, res) => {
         res.status(500).json({ message: 'Login failed' });
     }
 });
+// API endpoint for recording user activities
+app.post('/do_activity', (req, res) => {
+    const user = req.session.user;
+    const activityDescription = req.body.activity_description;
+
+    // Insert the activity into the database with the user ID
+    const insertQuery = 'INSERT INTO users_activities (user_id, description) VALUES (?, ?)';
+    db.query(insertQuery, [user.id, activityDescription], (insertErr) => {
+        if (insertErr) {
+            console.error('Error recording activity:', insertErr);
+            res.status(500).json({ message: 'Error recording activity' });
+        } else {
+            res.json({ message: 'Activity recorded' });
+        }
+    });
+});
+
+// API endpoint to retrieve user-specific activities
+app.get('/user_activities', (req, res) => {
+    const user = req.session.user;
+    
+    // Retrieve activities for the specific user
+    const selectQuery = 'SELECT * FROM users_activities WHERE user_id = ?';
+    db.query(selectQuery, [user.id], (selectErr, selectResult) => {
+        if (selectErr) {
+            console.error('Error retrieving user activities:', selectErr);
+            res.status(500).json({ message: 'Error retrieving user activities' });
+        } else {
+            res.json(selectResult);
+        }
+    });
+});
 
 app.listen(port, () => {
     console.log(`Login server is running on http://localhost:${port}`);
