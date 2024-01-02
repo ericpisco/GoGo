@@ -76,3 +76,14 @@ function deleteTask(index) {
     // Reload tasks in the DOM
     loadTasks();
 }
+
+function clearCompletedTasks() {
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    const updatedTasks = tasks.filter(task => !task.completed);
+
+    // Save updated tasks to localStorage
+    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+
+    // Reload tasks in the DOM
+    loadTasks();
+}
