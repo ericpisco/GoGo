@@ -77,16 +77,13 @@ app.post('/login', async (req, res) => {
                         phone: user.phone
                     };
 
-                    // Log the user login activity
+                    // Insert login activity into user_activities
                     const logActivityQuery = 'INSERT INTO user_activities (user_id, activity_type) VALUES (?, ?)';
                     db.query(logActivityQuery, [user.id, 'login'], (logErr, logResult) => {
                         if (logErr) {
                             console.error('Error logging user activity:', logErr);
                             res.status(500).json({ message: 'Login failed' });
                         } else {
-                            // Set a session variable to indicate successful login
-                            req.session.loggedIn = true;
-
                             // Redirect to index.html
                             res.redirect('/index.html');
                         }
@@ -102,7 +99,27 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// Serve static files (including index.html)
+// API endpoint to get user activities
+app.get('/user-activities', (req, res) => {
+    const userId = req.session.user ? req.session.user.id : null;
+
+    if (!userId) {
+        return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    // Fetch user activities from the database
+    const getActivitiesQuery = 'SELECT * FROM user_activities WHERE user_id = ?';
+    db.query(getActivitiesQuery, [userId], (err, result) => {
+        if (err) {
+            console.error('Error fetching user activities:', err);
+            res.status(500).json({ message: 'Failed to fetch user activities' });
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+// Serve static files 
 app.use(express.static(path.join(__dirname, '/')));
 
 app.listen(port, () => {
