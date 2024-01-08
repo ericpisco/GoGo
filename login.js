@@ -23,14 +23,6 @@ const db = mysql.createConnection({
     database: 'go',
 });
 
-db.connect(err => {
-    if (err) {
-        console.error('Error connecting to MySQL:', err);
-    } else {
-        console.log('Connected to MySQL');
-    }
-});
-
 // Create user_activities table
 const createActivitiesTable = `
     CREATE TABLE IF NOT EXISTS user_activities (
@@ -41,6 +33,14 @@ const createActivitiesTable = `
         FOREIGN KEY (user_id) REFERENCES users(id)
     );
 `;
+
+db.connect(err => {
+    if (err) {
+        console.error('Error connecting to MySQL:', err);
+    } else {
+        console.log('Connected to MySQL');
+    }
+});
 
 db.query(createActivitiesTable, (err) => {
     if (err) {
@@ -99,6 +99,20 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// API endpoint for logout
+app.post('/logout', (req, res) => {
+    // Destroy the session
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Error destroying session during logout:', err);
+            res.status(500).json({ message: 'Logout failed' });
+        } else {
+            // Redirect to home.html after successful logout
+            res.redirect('/home.html');
+        }
+    });
+});
+
 // API endpoint to get user activities
 app.get('/user-activities', (req, res) => {
     const userId = req.session.user ? req.session.user.id : null;
@@ -119,7 +133,7 @@ app.get('/user-activities', (req, res) => {
     });
 });
 
-// Serve static files 
+// Serve static files
 app.use(express.static(path.join(__dirname, '/')));
 
 app.listen(port, () => {
