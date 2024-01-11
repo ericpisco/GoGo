@@ -109,7 +109,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     }
 }
 
-// create autocomplete objects for all inputs
+// create autocomplete objects for all inputs.
 var options = {
     types: ['(cities)']
 };
